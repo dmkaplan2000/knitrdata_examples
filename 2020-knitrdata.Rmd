@@ -48,7 +48,8 @@ library(knitrdata)
 
 ```{r r-packages-bib,eval=FALSE}
 # Add bib references for R packages,
-knitr::write_bib(c(.packages(),"rticles","rmarkdown","knitr","remotes","bookdown",
+knitr::write_bib(c(.packages(),"rticles","starticles","rmarkdown","knitr",
+                   "remotes","bookdown",
                    "kableExtra","knitrdata","gpg","xfun","citr"),
                  "2020-knitrdata.r-packages.bib")
 ```
@@ -67,11 +68,11 @@ writeLines(c(x,y),"2020-knitrdata.bib")
 
 # Introduction
 
-The basic principles of open science are that the data, research methodologies and analysis tools (e.g., the specific computational tools) used for scientific research should be made publicly available so that others can confirm and validate scientific analyses. Open science is particularly important for studies and disciplines for which true experimental replication is often difficult or impossible due to spatial, temporal or individual specificity [e.g., we cannot replicate Earth; @PowersOpensciencereproducibility2019]. In these cases, computational reproducibility, i.e., the ability to reproduce analytic results given the original data and analysis code, can still be achieved and can provide significant credibility to results [@PowersOpensciencereproducibility2019]. Though scientists, governments and journals often place great emphasis on access to raw data [@CasseyReproducibilityRepeatabilityEcology2006; @LowndesOurpathbetter2017], it is important to remember that computational reproducibility can only be assured if data, methods, computational tools and the relationships between these are *all* openly accessible. Even when data are made publicly available, there are often significant gaps between the Methods section of a publication and the raw data that complicate reproducibility without access to the detailed code used to generate results. It is, therefore, essential for computational reproducibility that the code used to generate results be distributed along with the data and the publication itself. Though there are a number of potential ways to distribute all these elements together, probably the most common current approach is to place the data in a publicly accessible data store (e.g., [Dryad](https://datadryad.org)) and to associate the code with the publication via the supplementary material and/or by including it in the data store. Though this is a perfectly viable approach that can greatly enhance transparency of research, it physically separates data from analysis code and interpretation of results, potentially leading to confusion and/or loss of information regarding how these different element interrelate. At times, it would be more convenient, transparent and effective to join all the elements into a single document. The R package presented here, \CRANpkg{knitrdata} [@R-knitrdata], provides tools for doing just that - integrating data directly into Rmarkdown source documents so that data, code for analyses and text interpreting results are all available in a single file.
+The basic principles of open science are that the data, research methodologies and analysis tools (e.g., the specific computational tools) used for scientific research should be made publicly available so that others can confirm and validate scientific analyses. Open science is particularly important for studies and disciplines for which true experimental replication is often difficult or impossible due to spatial, temporal or individual specificity [e.g., we cannot replicate Earth; @PowersOpensciencereproducibility2019]. In these cases, computational reproducibility, i.e., the ability to reproduce analytic results given the original data and analysis code, can still be achieved and can provide significant credibility to results [@PowersOpensciencereproducibility2019]. Though scientists, governments and journals often place great emphasis on access to raw data [@CasseyReproducibilityRepeatabilityEcology2006; @LowndesOurpathbetter2017], it is important to remember that computational reproducibility can only be assured if data, methods, computational tools and the relationships between these are *all* openly accessible. Even when data are made publicly available, there are often significant gaps between the Methods section of a publication and the raw data that complicate reproducibility without access to the detailed code used to generate results. It is, therefore, essential for computational reproducibility that the code used to generate results be distributed along with the data and the publication itself. Though there are a number of potential ways to distribute all these elements together, probably the most common current approach is to place the data in a publicly accessible data store (e.g., [Dryad](https://datadryad.org)) and to associate the code with the publication via the supplementary material and/or by including it in the data store. Though this is a perfectly viable approach that can greatly enhance transparency of research, it physically separates data from analysis code and interpretation of results, potentially leading to confusion and/or loss of information regarding how these different element interrelate. At times, it would be more convenient, transparent and/or effective to join all the elements into a single document. The R package presented here, \CRANpkg{knitrdata} [@R-knitrdata], provides tools for doing just that - integrating data directly into Rmarkdown source documents so that data, code for analyses and text interpreting results are all available in a single file.
 
-Rmarkdown [@R-rmarkdown] has become an increasingly popular tool for generating rich scientific documents while maintaining a source document that makes explicit the relationship between text and specific analyses used to produce results [@knitr2014; @LowndesOurpathbetter2017]. In a nutshell, Rmarkdown source documents are text documents comprised of two major elements: structured text that make up the headings and paragraphs of the document, and blocks of code (typically, but not exclusively, R code) for doing analyses. Rmarkdown source documents can be processed into a variety of final output formats, including PDF documents and HTML web pages. During this processing, the blocks of code in the source document are executed and used to augment the final output document with figures, tables and analytic results. In addition to providing a single source document that includes both written text and code for carrying out analyses, Rmarkdown has other benefits for open science, such as requiring the user to provide fully functioning code that runs from start to end without errors and facilitating reuse and updating of documents when new data arrives. Entire scientific publications can be written in Rmarkdown [@R-rticles], and doing so can significantly enhance the link between scientific research and the underlying computational tools used to carry out that research, an important step along the path to computational reproducibility [@LowndesOurpathbetter2017].
+Rmarkdown [@R-rmarkdown] has become an increasingly popular tool for generating rich scientific documents while maintaining a source document that makes explicit the relationship between text and specific analyses used to produce results [@knitr2014; @LowndesOurpathbetter2017]. In a nutshell, Rmarkdown source documents are text documents comprised of two major elements: structured text that make up the headings and paragraphs of the document, and blocks of code (typically, but not exclusively, R code) for doing analyses and generating figures and tables. Rmarkdown source documents can be processed into a variety of final output formats, including PDF documents formatted for scientific publication. During this processing, the blocks of code in the source document are executed and used to augment the final output document with figures, tables and analytic results. In addition to providing a single source document that includes both written text and code for carrying out analyses, Rmarkdown has other benefits for open science, such as requiring the user to provide fully functioning code that runs from start to end without errors and facilitating reuse and updating of documents when new data arrives.
 
-Until now, however, it has been difficult to integrate the raw data itself that are the bases for analyses directly into Rmarkdown source documents. Typically, data are placed in external files that are accessed via R code contained in the Rmarkdown source document that is executed during the knitting. As previously mentioned, this has the disadvantage of physically separating data from analysis code and text contained in the Rmarkdown source document, potentially leading to confusion and/or information loss. Furthermore, on a practical level, it often can be extremely convenient to merge all pertinent information into a single source document (e.g., to facilitate collaboration on an Rmarkdown source document). `knitrdata` provides a simple mechanism for integrating arbitrary complex data directly into Rmarkdown source documents, thereby allowing one to create standalone source documents that include all the elements necessary for computational reproducibility.
+Until now, however, it has been difficult to integrate the raw data itself that are the bases for analyses directly into Rmarkdown source documents. Typically, data are placed in external files that are accessed via R code contained in the Rmarkdown source document that is executed during the knitting. As previously mentioned, this has the disadvantage of physically separating data from analysis code and text contained in the Rmarkdown source document, potentially leading to confusion and/or information loss. Furthermore, on a practical level, it often can be extremely convenient to merge all pertinent information into a single source document (e.g., to facilitate collaboration on an Rmarkdown source document). `knitrdata` provides a simple mechanism for integrating arbitrary text or binary data directly into Rmarkdown source documents, thereby allowing one to create standalone source documents that include all the elements necessary for conducting analyses. This integration is done with minimal additional formatting of the data (e.g., allowing one to insert comma-separated value (CSV) data without escaping quotation marks directly into Rmarkdown documents) and in a way that clearly visually separates data from R code, thereby facilitating comprehension of the different elements that contribute to analyses. `knitrdata` also facilitates encryption of data integrated into Rmarkdown source documents, thereby allowing one to merge data with analysis code and text even in cases where industrial or ethical privacy constraints restrict data access to a specific group of individuals.
 
 Below, I briefly provide a conceptual overview of how `knitrdata` works, presenting some simple examples of its use and the tools available to facilitate integrating data into Rmarkdown source documents. I then discuss typical use cases and workflows for development of Rmarkdown source documents with `knitrdata`, as well as a number of potential caveats for its use. I conclude by reflecting on the value of `knitrdata` for achieving computational reproducibility and its place within the growing pantheon of tools that make Rmarkdown an increasingly essential tool for research.
 
@@ -105,33 +106,56 @@ Though code chunks typically contain R code, `knitr` supports a large number of 
 
 ````markdown
 `r ''````{sql connection="dbcon",output.var="d"}
-SELECT * FROM mytable;
+SELECT * FROM "MyTable";
 `r ''````
 ````
 
-\noindent During knitting, this will create in the R environment a variable `d` containing the contents of the table `mytable` accessible via the (previously created) active R database connection `dbcon`. Note that the name of the database connection and the name of the output variable are supplied in the chunk header via what are known as *chunk options*.
+\noindent During knitting, this will create in the R environment a variable `d` containing the contents of the table `MyTable` accessible via the (previously created) active R database connection `dbcon`. Note that the name of the database connection and the name of the output variable are supplied in the chunk header via what are known as *chunk options*. Though this database table could be imported into the R environment without the SQL language engine using R code:
 
-The `knitrdata` package extends this basic formalism, adding a new `data` language engine to the list of data engines known to `knitr`. Unlike most other language engines, the contents of `data` chunks are not code, but rather raw "data" to be imported into the R environment and/or exported to an external file. Here the term "data" is used in a very wide sense, including not only standard data tables or binary data (e.g., RDS files, NetCDF files, images), but also text and formatted text (e.g., XML files, BibTeX files). For example, placing the following chunk in a Rmarkdown source document will, during the knitting process, create in the R environment a data frame `d` containing the contents of the comma-separated values (CSV) data in the chunk (provided that the `knitrdata` package has been previously loaded as described above):
+````markdown
+`r ''````{r}
+d = dbGetQuery(dccon,"SELECT * FROM \"MyTable\";")
+`r ''````
+````
+
+\noindent the use of the SQL language engine has both practical and conceptual advantages. On the practical side, it avoids the need to escape quotation marks and allows text editors to recognize and highlight the code as SQL, both of which becoming increasingly valuable as the length and complexity of SQL queries increase. On the conceptual side, using the SQL engine visually separates database queries from R code and text, thereby better communicating the structure and functioning of analyses in Rmarkdown documents.
+
+The `knitrdata` package works in many ways analogously to the SQL language engine, adding a new `data` language engine to the list of language engines known to `knitr` that is specifically designed to import raw "data" into the R environment and/or export it to external files. Here the term "data" is used in a very wide sense, including not only standard data tables (e.g., CSV text files) or binary data (e.g., RDS files, NetCDF files, images), but also text and formatted text (e.g., XML files, BibTeX files). For example, placing the following chunk in a Rmarkdown source document will, during the knitting process, create in the R environment a data frame `d` containing the contents of the comma-separated values (CSV) data in the chunk (provided that the `knitrdata` package has been previously loaded as described above):
 
 ````markdown
 `r ''````{data output.var="d",loader.function=read.csv}
-site,density
-a,1.2
-b,3.4
-c,5.6
+name,score
+David M. Kaplan,1.2
+The man formerly known as "Prince",3.4
+Peter O'Toole,5.6
 `r ''````
 ````
 
 ```{data output.var="d",loader.function=read.csv,echo=FALSE}
-site,density
-a,1.2
-b,3.4
-c,5.6
+name,score
+David M. Kaplan,1.2
+The man formerly known as "Prince",3.4
+Peter O'Toole,5.6
 ```
 
-\noindent As with the SQL language engine, the name of the output variable for the chunk is supplied with a chunk option and in this example a `loader.function` option instructs `knitrdata` how to translate the contents of the chunk into a usable R object (in this example `read.csv` is used to translate the CSV data into a data frame).
+\noindent As with the SQL language engine, the name of the output variable for the chunk is supplied with a chunk option and in this example a `loader.function` option instructs `knitrdata` how to translate the contents of the chunk into a usable R object (in this example the R function `read.csv` is used to translate the CSV data into a data frame).
 
-Incorporating binary data into Rmarkdown source documents is a bit more complicated as the data must first be *encoded* as ASCII text (see the Section below on [Binary data chunks](#binary) for details), but the basic principles are the same - encoded binary data is incorporated into s `data` chunk and chunk options are used to tell `knitrdata` how to decode the data and load it into the R environment during knitting (see Table \ref{tab:knitrdatachunkops} for a full list of `data` chunk options). There is also the possibility of saving `data` chunk contents out to external files using the `output.file` chunk option. This option is particularly useful for integrating into Rmarkdown source documents ancillary text files used in the final formatting of the output of the knitting process, such as BibTeX files with references, LaTeX style files for PDF output and CSS style files for HTML output. For example, the following chunk would export a BibTeX reference to a file named `refs.bib`, taking care not to overwrite an existing file with the same name [though note that similar functionality can also be achieved with the `cat` language engine; @XieMarkdownCookbook2020]:
+There are of course a number of other ways that such a simple data table could be imported into the R environment, including via an external data file or directly in R code, one approach to which might be:
+
+````markdown
+`r ''````{r}
+d = read.csv(textConnection(
+"name,score
+David M. Kaplan,1.2
+The man formerly known as \"Prince\",3.4
+Peter O'Toole,5.6
+"))
+`r ''````
+````
+
+\noindent However, using the `data` language engine has much the same practical and conceptual advantages as the SQL data language engine, avoiding the need for escaping certain characters and visually separating data from code, both of which become increasingly valuable as dataset size increases.
+
+Incorporating binary data into Rmarkdown source documents is a bit more complicated as the data must first be *encoded* as ASCII text (see the Section below on [Binary data chunks](#binary) for details), but the basic principles are the same - encoded binary data is incorporated into a `data` chunk and chunk options are used to tell `knitrdata` how to decode the data and load it into the R environment during knitting (see Table \ref{tab:knitrdatachunkops} for a full list of `data` chunk options). There is also the possibility of saving `data` chunk contents out to external files using the `output.file` chunk option. This option is particularly useful for integrating into Rmarkdown source documents ancillary text files used in the final formatting of the output of the knitting process, such as BibTeX files with references, LaTeX style files for PDF output and CSS style files for HTML output. For example, the following chunk would export a BibTeX reference to a file named `refs.bib`, taking care not to overwrite an existing file with the same name [though note that similar functionality can also be achieved with the `cat` language engine; @XieMarkdownCookbook2020]:
 
 ````markdown
 `r ''````{data output.file = "refs.bib", eval=!file.exists("refs.bib")}
@@ -144,7 +168,7 @@ Incorporating binary data into Rmarkdown source documents is a bit more complica
 `r ''````
 ````
 
-\noindent As code chunks are processed during knitting before generating the final output document, these files can be generated at any point during the knitting process using `data` chunks.
+\noindent As code chunks are processed during knitting before generating the final output document, these files can be generated at any point during the knitting process using `data` chunks (in particular, it is often most practical to place this information at the end of a Rmarkdown document).
 
 ```{data output.var="t",loader.function=read.csv,loader.ops=list(sep="|",check.names=FALSE),echo=FALSE}
 Chunk option|Description
@@ -184,6 +208,8 @@ Using `data` chunks, just about any data or information that would typically be 
 
 Note that this is different from the `self_contained` YAML header option permitted by some Rmarkdown output formats, notably HTML output formats. This option attempts to create a single *output* file that contains everything needed to visualize the final output document (e.g., in the case of HTML documents, the output HTML file will contain any CSS styles, javascript libraries and/or images used by the document), but it says nothing about whether or not external files are needed to knit the Rmarkdown source document (i.e., it is relevant to the output side of knitting, not the input side). In fact, a source document can be standalone in that all data and formatting files needed for knitting are incorporated within it using `data` chunks, but the final output (HTML) document may not be self contained because it relies on external files or libraries for visualization, and vice-versa (i.e., standalone source documents and standalone output documents are two separate and independent concerns).
 
+Under the hood, the way `knitrdata` works is by adding (using the `knitr::knit_engines$set()` function) to the list of language engines that `knitr` maintains internally a `data` entry that points to a function inside the `knitrdata` package that processes `data` chunks (specifically the `eng_data` function, though users would typically not interact directly with this function). When knitting a Rmarkdown document, `knitr` will call this function each time a `data` chunk is encountered, passing it both the textual contents of the chunk and any chunk options. The function then uses this information to process the chunk, decoding it if necessary (via the `format` and `encoding` chunk options) and returning it as either a variable in the R environment (`output.var` chunk option) and/or an external file (`output.file` chunk option) after any additional processing has been carried out (via, e.g., the `loader.function` chunk option).  
+
 ## Text data chunks
 
 Though a basic example of a `data` chunk containing CSV tabular data has been presented in the previous section, it is useful to develop that example a bit more to better understand the functioning of `knitrdata`. The simplest `data` chunks contain plain text that is read, but not processed by `knitrdata`. For example, omitting the `loader.function` chunk option from the previously presented `data` chunk with CSV data produces a different outcome:
@@ -209,7 +235,7 @@ The `loader.function` chunk option used in the initial `data` chunk example abov
 
 ## Binary data chunks {#binary}
 
-Though text data chunks can integrate into Rmarkdown source documents many small- to medium-sized tabular data sets, binary data formats, such as RDS files, are more convenient for more complicated and/or larger data sets. Incorporating binary data into Rmarkdown documents requires additional steps relative to text data: encoding the binary data as text and telling the `data` chunk how to decode the encoded data. `knitrdata` provides tools for simplifying these two steps that currently support encoding and decoding of two widely-used encodings: `base64` and `gpg`. `base64` is a standard format for encoding binary data as ASCII text based on translation of 6 bits of information into one of 64 alphanumeric and symbolic ASCII characters. Base64 encoded data looks like a somewhat intimidating jumble of characters, but the format is widely used behind the scenes in many common web applications, such as email attachments and embedding images in HTML pages, and therefore is widely supported by a number of software platforms including R. 
+Though text data chunks can integrate into Rmarkdown source documents many small- to medium-sized tabular data sets, binary data formats, such as RDS files, are more convenient for more complicated and/or larger data sets. Incorporating binary data into Rmarkdown documents requires additional steps relative to text data: encoding the binary data as text and telling the `data` chunk how to decode the encoded data. `knitrdata` provides tools for simplifying these two steps that currently support encoding and decoding of two widely-used encodings: `base64` and `gpg`. [`base64`](https://en.wikipedia.org/wiki/Base64) is a standard format for encoding binary data as ASCII text based on translation of 6 bits of information into one of 64 alphanumeric and symbolic ASCII characters. Base64 encoded data looks like a somewhat intimidating jumble of characters, but the format is extremely widely used behind the scenes in many common web applications, such as email attachments and embedding images in HTML pages. In particular, `base64` is widely supported by a number of software packages and programming languages, including R, Python, Matlab and Julia, so `base64` encoded data is highly readable and likely to remain so for a very long time. 
 
 `gpg`, standing for [GNU Privacy Guard](https://gnupg.org/), is a standard protocol for encrypting information so that only those with specific decryption keys can have access. This format can be used to ensure that only specific individuals can actually read and utilize the data contained in a Rmarkdown source document, as might be necessary when dealing with confidential (e.g., medical or trade-secret) data. Here, I focus primarily on `base64` encoding as this is the simplest and likely most common format for binary `data` chunks, and a full description of the configuration and use of GPG is beyond the scope of this document. The detailed use of `gpg` is, however, described in the package vignette.
 
@@ -238,14 +264,20 @@ Once one has the encoded data, one can use it in a `data` chunk by supplying the
 
 ````markdown
 `r ''````{data format="binary",output.var="d",loader.function=readRDS}
-H4sIAAAAAAAAA4vgYmBgYGZgZgNiViCTgTU0xE3XAsgQAGJGBhYGTiAtV5xZkqqT
-kpoHpCu5EnUM9Yy4knSM9Uy4knVM9cwAEV3yn0UAAAA=
+H4sIAAAAAAAAA12OvQvCMBDFz48OKn6A4Hybk11c3HQQFxE7VHA9aopimkgiFjf/
+Z2etl5oOesO93I/3crdvA0ADmnXuAT8h2MWryYynIQ9MYfA1QIu1v6Tb6YCbENd0
+kaQ8xvgoMCOFqTaZMPKOZ6VzhWQxMieVCO/rRuIqDG7HsdZSMOi5v+fPaVmLjtdR
+WhaUV0HNhwNFmbD+oLqHTQcrg020Ef+pRJKtUhVsH+hKYWpc9tfeMjoPq0Vdt+jB
+rSiKF8v7A6bdy9EtAQAA
 `r ''````
 ````
 
 ```{data format="binary",output.var="d",loader.function=readRDS}
-H4sIAAAAAAAAA4vgYmBgYGZgZgNiViCTgTU0xE3XAsgQAGJGBhYGTiAtV5xZkqqT
-kpoHpCu5EnUM9Yy4knSM9Uy4knVM9cwAEV3yn0UAAAA=
+H4sIAAAAAAAAA12OvQvCMBDFz48OKn6A4Hybk11c3HQQFxE7VHA9aopimkgiFjf/
+Z2etl5oOesO93I/3crdvA0ADmnXuAT8h2MWryYynIQ9MYfA1QIu1v6Tb6YCbENd0
+kaQ8xvgoMCOFqTaZMPKOZ6VzhWQxMieVCO/rRuIqDG7HsdZSMOi5v+fPaVmLjtdR
+WhaUV0HNhwNFmbD+oLqHTQcrg020Ef+pRJKtUhVsH+hKYWpc9tfeMjoPq0Vdt+jB
+rSiKF8v7A6bdy9EtAQAA
 ```
 
 \noindent During knitting, this chunk will be processed, decoding the encoded binary RDS file and loading it into the variable `d` using the `readRDS` function. `knitrdata` will by default assume that the encoding is base64 when `format="binary"`, but one can also specify the chunk option `encoding="base64"` for increased clarity. For GPG encoded data, one would use `encoding="gpg"`. As with text `data` chunks, one can alternatively output the decoded contents of the chunk to a file (`output.file` option) or return it to the R session as a `raw` binary vector (by not supplying a `loader.function`).
@@ -2478,9 +2510,13 @@ As manually encoding data and creating `data` chunks can be complicated, particu
 
 `knitrdata` also provides a `Remove chunks` addin that allows ones one to quickly delete unwanted (`data` and non-`data`) chunks (Fig. \ref{fig:addinfigure}b), as well as a set of functions for command-line examination, creation and removal of chunks from Rmarkdown documents (e.g., `create_chunk`, `insert_chunk`, `list_rmd_chunks`, `remove_chunks`).
 
+If one is not using RStudio to edit and knit Rmarkdown documents, then one can invoke the Skiny dialog to create `data` chunks directly from the command line using the `create_data_chunk_dialog` function contained in the `knitrdata` package. In this case, chunk contents will be (silently) returned on the command line for later insertion in a Rmarkdown document.
+
 # Use cases
 
-There are a number of use cases for the functionality provided by `knitrdata`, primary among them providing a single source for public diffusion of all information related to a publication or report, and/or making collaboration on Rmarkdown source documents simpler by eliminating or reducing the need for external files. A simple example of the prior is the Rmarkdown source document used to generate [this publication](https://github.com/dmkaplan2000/knitrdata_examples/blob/master/2020-knitrdata.Rmd), which includes text `data` chunks for the tabular data in Table \ref{tab:knitrdatachunkops}, as well as the ancillary formatting files associated with the document (BibTeX and LaTeX style files), and encoded binary `data` chunks for the PNG images in Figs. \ref{fig:addinfigure} & \ref{fig:openclosechunkfig}. A more complicated example is the Rmarkdown source document for @WainQuantifyingincreasefishing2020, [publicly available on github](https://github.com/dmkaplan2000/knitrdata_examples/blob/master/wain.et.al.2020.standalone.Rmd). In this case, we wished to provide a permanent public record of the methods used in the paper and ensure that results could be verified, while at the same time respecting confidentiality agreements with respect to fine scale fishing activity data used in the paper. To achieve this we integrated the fine scale data in the Rmarkdown source document as an encrypted GPG `data` chunk. This approach may have value for a wide number of other studies using sensitive economic, social or medical data. To provide a complete record of the paper in a single document, we also integrated the Rmarkdown source document for the online supplementary materials into a `data` chunk within the Rmarkdown source document for the paper itself. As this supplementary materials document contains Rmarkdown chunks that would otherwise confuse the knitting process if integrated as raw text inside a `data` chunk, we base64 encoded this source document before including it in a `data` chunk. The document also contains `data` chunks for small data tables and for exporting to external files the ancillary formatting files required for knitting the document (BibTeX references, the LaTeX style file, the CSL citation style file, etc.). Finally, during the knitting process, the document also generates a lightweight version of itself that does not include the main data chunk, using the functionality of the `knitrdata` package to remove large data chunks. Overall, `knitrdata` provided a convenient way of generating a single document that contained all the necessary information for generating the final publication, thereby demonstrating computational reproducibility for the publication.
+There are a number of use cases for the functionality provided by `knitrdata`, primary among them providing a single source for public diffusion of all information related to a publication or report, and/or making collaboration on Rmarkdown source documents simpler by eliminating or reducing the need for external files. A simple example of the prior is the Rmarkdown source document used to generate [this publication](https://github.com/dmkaplan2000/knitrdata_examples/blob/master/2020-knitrdata.Rmd), which includes text `data` chunks for the tabular data in Table \ref{tab:knitrdatachunkops}, as well as the ancillary formatting files associated with the document (BibTeX and LaTeX style files), and encoded binary `data` chunks for the PNG images in Figs. \ref{fig:addinfigure} & \ref{fig:openclosechunkfig}. 
+
+A more complicated example is the Rmarkdown source document for @wainQuantifyingIncreaseFishing2021, [publicly available on github](https://github.com/dmkaplan2000/knitrdata_examples/blob/master/wain.et.al.2020.standalone.Rmd). In this case, we wished to provide a permanent public record of the methods used in the paper and ensure that results could be verified, while at the same time respecting confidentiality agreements with respect to fine scale fishing activity data used in the paper. To achieve this we integrated the fine scale data in the Rmarkdown source document as an encrypted GPG `data` chunk. This approach may have value for a wide number of other studies using sensitive economic, social or medical data. To provide a complete record of the paper in a single document, we also integrated the Rmarkdown source document for the online supplementary materials into a `data` chunk within the Rmarkdown source document for the paper itself. As this supplementary materials document contains Rmarkdown chunks that would otherwise confuse the knitting process if integrated as raw text inside a `data` chunk, we base64 encoded this source document before including it in a `data` chunk. The document also contains `data` chunks for small data tables and for exporting to external files the ancillary formatting files required for knitting the document (BibTeX references, the LaTeX style file, the CSL citation style file, etc.). Finally, during the knitting process, the document also generates a lightweight version of itself that does not include the main data chunk, using the functionality of the `knitrdata` package to remove large data chunks. Overall, `knitrdata` provided a convenient way of generating a single document that contained all the necessary information for generating the final publication, thereby demonstrating computational reproducibility for the publication.
 
 The uses of `data` chunks tend to fall into one of four general, not mutually-exclusive use cases:
 
@@ -2491,29 +2527,7 @@ The uses of `data` chunks tend to fall into one of four general, not mutually-ex
 
 \noindent Though the first of these use cases, integration of ancillary formatting files, can also be achieved with the `cat` language engine that is included with the `knitr` package [@XieMarkdownCookbook2020], `knitrdata` provides functionality that make this task easier and more secure. First, `knitrdata` allows for integrity checks on chunk contents that can control for unintentional modification of chunk contents (see the section on [data integrity](#integrity) below). Second, RStudio addins provided by the `knitrdata` package facilitate the integration of data into Rmarkdown source documents and the use of integrity checks. Finally, encoding of text documents permits integrating files that contain Rmarkdown chunks or other formatting that would otherwise be problematic within a `cat` chunk.
 
-The second of these use cases, tabular data, can also in principle be achieved using other tools in R. For example, the small data table used to illustrate the use of `data` chunks above could also be loaded into R using, among other possibilities, the functionality of the \CRANpkg{tibble} package [@R-tibble]:
-
-````markdown
-`r ''````{r}
-d = tibble::tribble(
-  ~site,~density,
-  "a",1.2,
-  "b",3.4,
-  "c",5.6
-)
-`r ''````
-````
-
-```{r echo=FALSE,include=FALSE}
-d = tibble::tribble(
-  ~site,~density,
-  "a",1.2,
-  "b",3.4,
-  "c",5.6
-)
-```
-
-\noindent Nevertheless, the use of `data` chunks is generally more ergonomic and flexible for anything but the smallest data tables as it allows the user to format data exactly as it would be in an external CSV file, without additional markup. As an example, the information contained in Table \ref{tab:knitrdatachunkops} was implemented in the source document for this paper as a `data` chunk for this reason.
+The second of these use cases, tabular data, can also in principle be achieved using other tools in R, such as a `textConnection` as shown above or via functionality in the \CRANpkg{tibble} package [@R-tibble]. Nevertheless, the use of `data` chunks is generally more ergonomic and flexible for anything but the smallest data tables as it allows the user to format data exactly as it would be in an external CSV file, without additional markup or the need to escape quotation marks. As an example, the information contained in Table \ref{tab:knitrdatachunkops} was implemented in the source document for this paper as a `data` chunk as it contains lots of quotations and formatting that would have been tedious to include using other approaches.
 
 The third and fourth use cases for `data` chunks, involving encoded binary data, are unique to `knitrdata` and allow for integration of complex data sets that would otherwise be very difficult to include in a Rmarkdown source document. 
 
@@ -2523,7 +2537,7 @@ When and in what ways to use the functionality provided by `knitrdata` during th
 
 On the other hand, if the objective of using `knitrdata` also includes reducing the complexity of collaborating on a Rmarkdown source document by reducing the number of external files necessary for knitting a document, then certain types of `data` chunks can be incorporated in a Rmarkdown source document during the initial phases of development with little impact on authors. Small- to medium-sized tabular data sets can be incorporated and this can have the benefit of making the tabular data visually available during the development process. Similarly, most ancillary formatting files can be placed at the very end of the Rmarkdown source document as these are only used after all chunks have been processed and, therefore, will not encumber the development process. Larger data sets, and in particular binary data sets, are a bit more problematic as they necessarily appear in the Rmarkdown source document before the data is used for analyses and will introduce significant amounts of text that are not human readable into the Rmarkdown source document. For this reason it may be best to leave incorporation of these data until the final stages of development, though see the sections below on [file size](#filesize) and [readability](#readable) for workarounds to these issues.
 
-This latter workflow involving incorporation of `data` chunks in two distinct stages of development is what was used when creating the source document for @WainQuantifyingincreasefishing2020. Small data tables and formatting files were incorporated directly into the document from the start, but the larger data set that was the basis for statistical analyses and the Rmarkdown source document for the supplementary materials were only incorporated at the end of development to provide an archival source document for the paper capable of demonstrating computational reproducibility.
+This latter workflow involving incorporation of `data` chunks in two distinct stages of development is what was used when creating the source document for @wainQuantifyingIncreaseFishing2021. Small data tables and formatting files were incorporated directly into the document from the start, but the larger data set that was the basis for statistical analyses and the Rmarkdown source document for the supplementary materials were only incorporated at the end of development to provide an archival source document for the paper capable of demonstrating computational reproducibility.
 
 # Caveats and concerns
 
@@ -2531,7 +2545,7 @@ There are a number caveats and concerns with respect to the use of `knitrdata`, 
 
 ## Won't this create huge Rmarkdown files? {#filesize}
 
-Incorporation of large data sets into `data` chunks will significantly increase the file size of Rmarkdown source documents, potentially making them more difficult to work with. Though it is unlikely to be practical to place extremely large data sets in Rmarkdown source documents, there are many contexts where data sets are sufficiently small so as to be included directly in a Rmarkdown source document. For example, the 8 years of fine scale fishing data used in @WainQuantifyingincreasefishing2020 added about 2 MB to the size of the Rmarkdown document when incorporated as a (compressed) RDS file, a size that is manageable and well within the limits of typical email attachments. RStudio currently will not open Rmarkdown documents larger than 5 MB in size, effectively limiting the amount of data that can be placed in a document unless one is willing to forgo graphical editing tools (larger documents can be rendered from the command line using the `rmarkdown::render` function, but not the more convenient and common "Knit" button of RStudio). Despite being in the era of big data, many scientific studies use primary data sets that are smaller than this size limit. As for @WainQuantifyingincreasefishing2020, many experimental or field studies may rely on data sets that are relatively small, and building a standalone Rmarkdown source document for these studies is an effective approach to documenting all quantitative information needed to reproduce results.
+Incorporation of large data sets into `data` chunks will significantly increase the file size of Rmarkdown source documents, potentially making them more difficult to work with. Though it is unlikely to be practical to place extremely large data sets in Rmarkdown source documents, there are many contexts where data sets are sufficiently small so as to be included directly in a Rmarkdown source document. For example, the 8 years of fine scale fishing data used in @wainQuantifyingIncreaseFishing2021 added about 2 MB to the size of the Rmarkdown document when incorporated as a (compressed) RDS file, a size that is manageable and well within the limits of typical email attachments. RStudio currently will not open Rmarkdown documents larger than 5 MB in size, effectively limiting the amount of data that can be placed in a document unless one is willing to forgo graphical editing tools (larger documents can be rendered from the command line using the `rmarkdown::render` function, but not the more convenient and common "Knit" button of RStudio). Despite being in the era of big data, many scientific studies use primary data sets that are smaller than this size limit. As for @wainQuantifyingIncreaseFishing2021, many experimental or field studies may rely on data sets that are relatively small, and building a standalone Rmarkdown source document for these studies is an effective approach to documenting all quantitative information needed to reproduce results.
 
 ## Won't Rmarkdown source documents become unreadable? {#readable}
 
@@ -5822,22 +5836,22 @@ It is possible to unintentionally corrupt a `data` chunk due to a misplaced keys
 
 Any time one runs code from a third party, there are security risks. Typically, code can write files to disk, potentially modifying essential files or installing malicious software. Rmarkdown source documents using the functionality of `knitrdata` are no different in this sense, though the practical risks may be more important as `knitrdata` may encourage users to knit entire documents to gain access to raw data and arbitrary data may be encoded in formats that are not human readable. Reducing these risks involves responsibilities for both the authors and the users of Rmarkdown source documents. For authors, the primary responsibilities are to assure that source documents cannot be modified by third parties between the author and the user, and to use best practices when carrying out file input and output during the knitting process. Integrity of source documents can be protected by using reputable websites with established security protocols for publishing Rmarkdown source documents, including, but not limited to, [github](https://github.com/), [Zenodo](https://zenodo.org/) and the [Dryad](https://datadryad.org). Authors can also publish MD5 sums for Rmarkdown source documents so users can verify the integrity of those documents, though the security of those MD5 sums is only as strong as the websites on which MD5 sums and Rmarkdown source documents are published. Best practices for file input and output include using temporary files and/or relative paths entirely within the base directory containing the Rmarkdown source document when writing files to disk, using file names that are unique (e.g., avoiding generic names like `data.csv`) and performing checks for the existence of files with the same name before writing information to disk. The `Insert filled data chunk` RStudio addin provided by `knitrdata` encourages the use of file existence checks in the `eval` chunk option controlling whether or not to process `data` chunks that write data to disk using the `output.file` chunk option, thereby avoiding overwriting existing files. 
 
-For users of Rmarkdown source documents, there are a number of simple steps one can take to avoid the most severe security risks. Knitting Rmarkdown source documents from an unprivileged user account and placing Rmarkdown source documents in new, empty directories can reduce the risks of the most malicious attacks. Users should also familiarize themselves with the workings of Rmarkdown source documents before knitting them and check for potentially problematic actions, such as use of absolute file paths and/or communication with external internet resources. This includes examination of the chunk options associated with `data` chunks (in particular, the `output.file` and `loader.function`). If one is primarily interested in just the raw data contained in `data` chunks within a Rmarkdown source document, then RStudio permits manual execution of individual chunks. This includes execution of `data` chunks, which can be processed individually using `Run current chunk` button of RStudio once the `knitrdata` library has been loaded.
+For users of Rmarkdown source documents, there are a number of simple steps one can take to avoid the most severe security risks. Knitting Rmarkdown source documents from an unprivileged user account and placing Rmarkdown source documents in new, empty directories can reduce the risks of the most malicious attacks. Users should also familiarize themselves with the workings of Rmarkdown source documents before knitting them and check for potentially problematic actions, such as use of absolute file paths and/or communication with external internet resources. This includes examination of the chunk options associated with `data` chunks (in particular, the `output.file` and `loader.function`). If one is primarily interested in just the raw data contained in `data` chunks within a Rmarkdown source document, then RStudio permits manual execution of individual chunks. This includes execution of `data` chunks, which can be processed individually using the `Run current chunk` button of RStudio once the `knitrdata` library has been loaded.
 
 # Conclusion
 
-`knitrdata` provides a simple, but effective, tool for integrating arbitrary data into Rmarkdown source documents. If used appropriately, this can help assure computational reproducibility of many scientific documents by allowing one to integrate all relevant external files and data directly into a single Rmarkdown source document. Anyone who has attempted to validate the results in a publication by requesting the associated data has potentially encountered, if they managed to get the data, a set of one or more data tables with limited metadata and only the publication itself as documentation of the methods. Validating publication results under these conditions is often difficult and time consuming. By encouraging the integration of data, code for carrying out analyses and text interpreting results in standalone Rmarkdown source documents, Rmarkdown with `knitrdata` can make it much easier to understand, reproduce and validate the details of scientific analyses. This combination can be particularly powerful when combined with other enhancements to Rmarkdown that make it possible to produce a wide variety of sophisticated scientific documents entirely within the confines of Rmarkdown: \CRANpkg{bookdown} [@R-bookdown] and \CRANpkg{rticles} [@R-rticles] for producing books and scientific publications with Rmarkdown, \CRANpkg{citr} [@R-citr] for bibliographic citations, and \CRANpkg{kableExtra} [@R-kableExtra] for producing sophisticated data tables. This suite of packages makes Rmarkdown a formidable tool for writing robust and verifiable scientific documents.
+`knitrdata` provides a simple, but effective, tool for integrating arbitrary data into Rmarkdown source documents. If used appropriately, this can help assure computational reproducibility of many scientific documents by allowing one to integrate all relevant external files and data directly into a single Rmarkdown source document. Anyone who has attempted to validate the results in a publication by requesting the associated data has potentially encountered, if they managed to get the data, a set of one or more data tables with limited metadata and only the publication itself as documentation of the methods. Validating publication results under these conditions is often difficult and time consuming. By encouraging the integration of data, code for carrying out analyses, and text interpreting results in standalone Rmarkdown source documents, Rmarkdown with `knitrdata` can make it much easier to understand, reproduce and validate the details of scientific analyses. This combination can be particularly powerful when combined with other enhancements to Rmarkdown that make it possible to produce a wide variety of sophisticated scientific documents entirely within the confines of Rmarkdown, such as \CRANpkg{bookdown} [@R-bookdown], \CRANpkg{rticles} [@R-rticles] and \CRANpkg{starticles} [@R-starticles] for producing books and scientific publications with Rmarkdown, \CRANpkg{citr} [@R-citr] for bibliographic citations, and \CRANpkg{kableExtra} [@R-kableExtra] for producing sophisticated data tables.
 
 # Online supporting information
 
-The Rmarkdown source documents for this publication and @WainQuantifyingincreasefishing2020 are available online at [https://github.com/dmkaplan2000/knitrdata_examples](https://github.com/dmkaplan2000/knitrdata_examples). Additional examples and the package vignette are available in the `knitrdata` package itself.
+The Rmarkdown source documents for this publication and @wainQuantifyingIncreaseFishing2021 are available online at [https://github.com/dmkaplan2000/knitrdata_examples](https://github.com/dmkaplan2000/knitrdata_examples). Additional examples and the package vignette are available in the `knitrdata` package itself.
 
 # Acknowledgements
 
-I would like to thank my colleagues at the MARBEC laboratory in Sète, France for numerous conversations that encouraged me to develop the `knitrdata` package. I would also like to thank Yihui Xie for advice and encouragement regarding the development of the package. The handling editor and an anonymous reviewer provided valuable feedback on the initial version of the manuscript that significantly improved the manuscript.
+I would like to thank my colleagues at the MARBEC laboratory in Sète, France for numerous conversations that encouraged me to develop the `knitrdata` package. I would also like to thank Yihui Xie for advice and encouragement regarding the development of the package. The handling editor and an anonymous reviewer provided valuable feedback that significantly improved the manuscript.
 
 <!-- Bibtex references -->
-```{data knitrdatabib, format = "text", encoding = "asis", output.file = "2020-knitrdata.bib", echo = FALSE, md5sum = "31b92ac68e292e74ac7280b51127114c", eval=!file.exists("2020-knitrdata.bib"),line.sep="\n"}
+```{data knitrdatabib, format = "text", encoding = "asis", output.file = "2020-knitrdata.bib", echo = FALSE, md5sum = "d27313275fcc377c6d0a8a84cd28a8dd", eval=!file.exists("2020-knitrdata.bib"),line.sep="\n"}
 
 @book{allaireRmarkdownDynamicDocuments2020,
   title = {Rmarkdown: {{Dynamic}} Documents for r},
@@ -6033,10 +6047,12 @@ I would like to thank my colleagues at the MARBEC laboratory in Sète, France fo
   file = {/powers.hampton.2019.open_science,_reproducibility,_and_transparency_in_ecology.pdf}
 }
 
-@book{rcoreteamLanguageEnvironmentStatistical2020,
-  title = {R: {{A}} Language and Environment for Statistical Computing},
+@book{rcoreteamLanguageEnvironmentStatistical2021,
+  ids = {R-base},
+  title = {R: {{A Language}} and {{Environment}} for {{Statistical Computing}}},
   author = {{R Core Team}},
-  year = {2020},
+  year = {2021},
+  publisher = {{R Foundation for Statistical Computing}},
   address = {{Vienna, Austria}},
   organization = {{R Foundation for Statistical Computing}}
 }
@@ -6066,19 +6082,19 @@ I would like to thank my colleagues at the MARBEC laboratory in Sète, France fo
   file = {/tenopir.et.al.2018.research_data_sharing.pdf}
 }
 
-@article{wainQuantifyingIncreaseFishing2020,
-  ids = {WainQuantifyingincreasefishingaccepted},
+@article{wainQuantifyingIncreaseFishing2021,
   title = {Quantifying the Increase in Fishing Efficiency Due to the Use of Drifting {{FADs}} Equipped with Echosounders in Tropical Tuna Purse Seine Fisheries},
   author = {Wain, Gwena{\"e}lle and Gu{\'e}ry, Lorele{\"i} and Kaplan, David Michael and Gaertner, Daniel},
-  year = {2020},
-  month = dec,
+  year = {2021},
+  month = feb,
   journal = {ICES Journal of Marine Science},
-  number = {fsaa216},
+  volume = {78},
+  number = {1},
+  pages = {235--245},
   issn = {1054-3139},
   doi = {10.1093/icesjms/fsaa216},
   abstract = {Numerous pelagic species are known to associate with floating objects (FOBs), including tropical tunas. Purse seiners use this behaviour to facilitate the capture of tropical tunas by deploying artificial drifting fish aggregating devices (dFADs). One major recent change has been the integration of echosounders in satellite-tracked GPS buoys attached to FOBs, allowing fishers to remotely estimate fishable biomass. Understanding the effects of this new technology on catch of the three main tuna species (yellowfin tuna, Thunnus albacares; bigeye tuna, Thunnus obesus; and skipjack tuna, Katsuwonus pelamis) is important to accurately correct for this change in catch-per-unit-effort (CPUE) indices used for stock assessments. We analysed catch data from the French purse seine fleet for the period 2010\textendash 2017 in the Indian Ocean to assess the impact of this fleet's switch to echosounder buoys around 2012. Results indicate that echosounders do not increase the probability a set will be succesful, but they have a positive effect on catch per set, with catches on average increasing by {$\approx$}2-2.5 tonnes per set ({$\approx$}10\%) when made on the vessel's own dFADs equipped with an echosounder buoy. Increases were due to a decrease in sets below {$\approx$}25 tonnes and an increase in those greater than {$\approx$}25 tonnes, with a non-linear transition around this threshold. This increase explains the considerable investment of purse seiners in echosounder buoys, but also raises concerns about bias in stock size estimates based on CPUE if we do not correct for this fishing efficiency increase.},
-  copyright = {All rights reserved},
-  file = {/home/dmk/papers2/wain.et.al.2020.quantifying_the_increase_in_fishing_efficiency_due_to_the_use_of_drifting_fads.online_supplementary.pdf;/home/dmk/papers2/wain.et.al.2020.quantifying_the_increase_in_fishing_efficiency_due_to_the_use_of_drifting_fads.pdf}
+  file = {/home/dmk/MEGA/papers/wain.et.al.2021.quantifying_the_increase_in_fishing_efficiency_due_to_the_use_of_drifting_fads.pdf;/home/dmk/papers2/wain.et.al.2020.quantifying_the_increase_in_fishing_efficiency_due_to_the_use_of_drifting_fads.online_supplementary.pdf;/home/dmk/papers2/wain.et.al.2020.quantifying_the_increase_in_fishing_efficiency_due_to_the_use_of_drifting_fads.pdf}
 }
 
 @article{wilsonOntologyConfoundsReproducibility2014,
@@ -6149,15 +6165,15 @@ I would like to thank my colleagues at the MARBEC laboratory in Sète, France fo
   author = {{R Core Team}},
   organization = {R Foundation for Statistical Computing},
   address = {Vienna, Austria},
-  year = {2021},
+  year = {2022},
   url = {https://www.R-project.org/},
 }
 
 @Manual{R-bookdown,
   title = {bookdown: Authoring Books and Technical Documents with R Markdown},
   author = {Yihui Xie},
-  year = {2021},
-  note = {R package version 0.24},
+  year = {2022},
+  note = {R package version 0.26},
   url = {https://CRAN.R-project.org/package=bookdown},
 }
 
@@ -6173,7 +6189,7 @@ I would like to thank my colleagues at the MARBEC laboratory in Sète, France fo
   title = {dplyr: A Grammar of Data Manipulation},
   author = {Hadley Wickham and Romain François and Lionel Henry and Kirill Müller},
   year = {2022},
-  note = {R package version 1.0.8},
+  note = {R package version 1.0.10},
   url = {https://CRAN.R-project.org/package=dplyr},
 }
 
@@ -6188,16 +6204,16 @@ I would like to thank my colleagues at the MARBEC laboratory in Sète, France fo
 @Manual{R-ggplot2,
   title = {ggplot2: Create Elegant Data Visualisations Using the Grammar of Graphics},
   author = {Hadley Wickham and Winston Chang and Lionel Henry and Thomas Lin Pedersen and Kohske Takahashi and Claus Wilke and Kara Woo and Hiroaki Yutani and Dewey Dunnington},
-  year = {2021},
-  note = {R package version 3.3.5},
+  year = {2022},
+  note = {R package version 3.3.6},
   url = {https://CRAN.R-project.org/package=ggplot2},
 }
 
 @Manual{R-gpg,
   title = {gpg: GNU Privacy Guard for R},
   author = {Jeroen Ooms},
-  year = {2021},
-  note = {R package version 1.2.6},
+  year = {2022},
+  note = {R package version 1.2.7},
   url = {https://github.com/jeroen/gpg},
 }
 
@@ -6212,8 +6228,8 @@ I would like to thank my colleagues at the MARBEC laboratory in Sète, France fo
 @Manual{R-knitr,
   title = {knitr: A General-Purpose Package for Dynamic Report Generation in R},
   author = {Yihui Xie},
-  year = {2021},
-  note = {R package version 1.37},
+  year = {2022},
+  note = {R package version 1.40},
   url = {https://yihui.org/knitr/},
 }
 
@@ -6253,32 +6269,41 @@ GitHub},
 @Manual{R-rmarkdown,
   title = {rmarkdown: Dynamic Documents for R},
   author = {JJ Allaire and Yihui Xie and Jonathan McPherson and Javier Luraschi and Kevin Ushey and Aron Atkins and Hadley Wickham and Joe Cheng and Winston Chang and Richard Iannone},
-  year = {2021},
-  note = {R package version 2.11},
+  year = {2022},
+  note = {R package version 2.16},
   url = {https://CRAN.R-project.org/package=rmarkdown},
 }
 
 @Manual{R-rticles,
   title = {rticles: Article Formats for R Markdown},
-  author = {JJ Allaire and Yihui Xie and Christophe Dervieux and {R Foundation} and Hadley Wickham and {Journal of Statistical Software} and Ramnath  Vaidyanathan and {Association for Computing Machinery} and Carl Boettiger and {Elsevier} and Karl Broman and Kirill Mueller and Bastiaan Quast and Randall  Pruim and Ben Marwick and Charlotte Wickham and Oliver Keyes and Miao Yu and Daniel Emaasit and Thierry Onkelinx and Alessandro Gasparini and Marc-Andre Desautels and Dominik Leutnant and {MDPI} and {Taylor and Francis} and Oğuzhan Öğreden and Dalton Hance and Daniel Nüst and Petter Uvesten and Elio Campitelli and John Muschelli and Alex Hayes and Zhian N. Kamvar and Noam Ross and Robrecht Cannoodt and Duncan Luguern and David M. Kaplan and Sebastian Kreutzer and Shixiang Wang and Jay Hesselberth},
-  year = {2021},
-  note = {R package version 0.22},
+  author = {JJ Allaire and Yihui Xie and Christophe Dervieux and {R Foundation} and Hadley Wickham and {Journal of Statistical Software} and Ramnath  Vaidyanathan and {Association for Computing Machinery} and Carl Boettiger and {Elsevier} and Karl Broman and Kirill Mueller and Bastiaan Quast and Randall  Pruim and Ben Marwick and Charlotte Wickham and Oliver Keyes and Miao Yu and Daniel Emaasit and Thierry Onkelinx and Alessandro Gasparini and Marc-Andre Desautels and Dominik Leutnant and {MDPI} and {Taylor and Francis} and Oğuzhan Öğreden and Dalton Hance and Daniel Nüst and Petter Uvesten and Elio Campitelli and John Muschelli and Alex Hayes and Zhian N. Kamvar and Noam Ross and Robrecht Cannoodt and Duncan Luguern and David M. Kaplan and Sebastian Kreutzer and Shixiang Wang and Jay Hesselberth and Rob Hyndman},
+  year = {2022},
+  note = {R package version 0.24},
   url = {https://github.com/rstudio/rticles},
+}
+
+@Manual{R-starticles,
+  title = {starticles: A Generic, Publisher-Independent Template for Writing Scientific
+Documents in rmarkdown},
+  author = {David M. Kaplan},
+  year = {2022},
+  note = {R package version 0.1.0},
+  url = {https://github.com/dmkaplan2000/starticles},
 }
 
 @Manual{R-stringr,
   title = {stringr: Simple, Consistent Wrappers for Common String Operations},
   author = {Hadley Wickham},
-  year = {2019},
-  note = {R package version 1.4.0},
+  year = {2022},
+  note = {R package version 1.4.1},
   url = {https://CRAN.R-project.org/package=stringr},
 }
 
 @Manual{R-tibble,
   title = {tibble: Simple Data Frames},
   author = {Kirill Müller and Hadley Wickham},
-  year = {2021},
-  note = {R package version 3.1.6},
+  year = {2022},
+  note = {R package version 3.1.8},
   url = {https://CRAN.R-project.org/package=tibble},
 }
 
@@ -6286,23 +6311,23 @@ GitHub},
   title = {tidyr: Tidy Messy Data},
   author = {Hadley Wickham and Maximilian Girlich},
   year = {2022},
-  note = {R package version 1.2.0},
+  note = {R package version 1.2.1},
   url = {https://CRAN.R-project.org/package=tidyr},
 }
 
 @Manual{R-tidyverse,
   title = {tidyverse: Easily Install and Load the Tidyverse},
   author = {Hadley Wickham},
-  year = {2021},
-  note = {R package version 1.3.1},
+  year = {2022},
+  note = {R package version 1.3.2},
   url = {https://CRAN.R-project.org/package=tidyverse},
 }
 
 @Manual{R-xfun,
   title = {xfun: Supporting Functions for Packages Maintained by Yihui Xie},
   author = {Yihui Xie},
-  year = {2021},
-  note = {R package version 0.29},
+  year = {2022},
+  note = {R package version 0.33},
   url = {https://github.com/yihui/xfun},
 }
 
@@ -6379,6 +6404,7 @@ GitHub},
 }
 
 ```
+
 
 
 <!-- Latex style file -->
